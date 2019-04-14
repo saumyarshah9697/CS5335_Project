@@ -23,10 +23,13 @@ prmRadius = 0.5;
 qMilestones = rrt(rob,qStart,qGoal,qMin,qMax,sphere1Center,sphereRadius, sphere2Center, sphere3Center);
 % Plot robot following path
 qTraj = interpMilestones(qMilestones);
-rob.plot(qTraj);
-positions = rob.fkine(qTraj);
+%rob.plot(qTraj);
+%positions = rob.fkine(qTraj);
 for i=1:length(qTraj)
-    pos = positions(1:3,4,i);
+    fk = rob.fkine(qTraj(i,:));
+    pos = fk(1:3,4);
+    rob.plot(qTraj(i,:))
+    %pos = positions(1:3,4,i);
     plot3(pos(1), pos(2), pos(3), '*r')
 end
  
