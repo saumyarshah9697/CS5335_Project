@@ -19,8 +19,8 @@ drawSphere(sphere1Center,sphereRadius);
 drawSphere(sphere2Center,sphereRadius);
 drawSphere(sphere3Center,sphereRadius);
 % Parameters for PRM and RRG in Q4 and Q5.
-prmNumSamples = 300;
-prmRadius = 5;
+% prmNumSamples = 300;
+% prmRadius = 5;
 qMilestones = rrt(rob,qStart,qGoal,qMin,qMax,sphere1Center,sphereRadius, sphere2Center, sphere3Center);
 % Plot robot following path
 qTraj = interpMilestones(qMilestones);
