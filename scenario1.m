@@ -1,14 +1,14 @@
 
-% [rrt1, prm1] = pathPlanWithObstacles(1);
+[rrt1, prm1] = pathPlanWithObstacles(1);
 [rrt2, prm2] = pathPlanWithObstacles(2);
 [rrt3, prm3] = pathPlanWithObstacles(3);
-lengths = [rrt2 prm2;rrt3 prm3];
+lengths = [rrt1 prm1;rrt2 prm2;rrt3 prm3];
 bar(lengths)
 
 function [path_size_rrt, path_size_prm] = pathPlanWithObstacles(numOfObstacles)
     % Plot robot and sphere
     rob = initialize();
-    XGoal = [0.5;0.5;-0.5];
+    XGoal = -[0.5;0.5;-0.5];
 
 qStart = [0 -0.78 0 -0.78 0 0];
 qGoal = rob.ikine6s(transl(XGoal));
@@ -34,7 +34,8 @@ plot3(pos(1), pos(2), pos(3), 'X','markersize',12);
 for i=1:size(sphereCenter,1)
     drawSphere(sphereCenter(i,:),sphereRadius(i));
 end
-qTraj_rrt = initializeRRT1(rob,qStart,qGoal,qMin,qMax,sphereCenter,sphereRadius);
+num=100;
+qTraj_rrt = initializeRRT1(rob,qStart,qGoal,qMin,qMax,sphereCenter,sphereRadius,num);
 %qTraj_prm = initializesPRM(rob,prmNumSamples,prmRadius,sphereCenter,sphereRadius,qStart, qGoal,qMax, qMin);
 
 path_size_rrt=0;

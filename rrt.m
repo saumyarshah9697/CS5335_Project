@@ -8,11 +8,11 @@
 %        sphereRadius -> radius of obstacle 
 % output: qMilestones -> mx4 matrix of vertices along path from start to
 %                        goal.
-function qMilestones = rrt(rob,qStart,qGoal,qMin,qMax,sphereCenters,sphereRadius)
+function qMilestones = rrt(rob,qStart,qGoal,qMin,qMax,sphereCenters,sphereRadius,num)
 
 V=[qStart];
 Parents=[0];
-for i=1:500
+for i=1:num
     iQ=[(qMax(1,1)-qMin(1,1)).*rand(1,1)+qMin(1,1),(qMax(1,2)-qMin(1,2)).*rand(1,1)+qMin(1,2),(qMax(1,3)-qMin(1,3)).*rand(1,1)+qMin(1,3), (qMax(1,4)-qMin(1,4)).*rand(1,1)+qMin(1,4),(qMax(1,5)-qMin(1,5)).*rand(1,1)+qMin(1,5),(qMax(1,6)-qMin(1,6)).*rand(1,1)+qMin(1,6)];
     bool=true;
         for b=1:size(sphereCenters,1)
