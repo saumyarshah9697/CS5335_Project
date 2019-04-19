@@ -36,7 +36,8 @@ for i=1:size(sphereCenter,1)
 end
 num=100;
 qTraj_rrt = initializeRRT1(rob,qStart,qGoal,qMin,qMax,sphereCenter,sphereRadius,num);
-%qTraj_prm = initializesPRM(rob,prmNumSamples,prmRadius,sphereCenter,sphereRadius,qStart, qGoal,qMax, qMin);
+disp("RRT");
+qTraj_prm = initializesPRM(rob,prmNumSamples,prmRadius,sphereCenter,sphereRadius,qStart, qGoal,qMax, qMin);
 
 path_size_rrt=0;
 path_size_prm=0;
@@ -52,21 +53,19 @@ for i=1:length(qTraj_rrt)
 end
 disp(prevPos)
 
-% fk = rob.fkine(qTraj_prm(i,:));
-% prevPos=fk(1:3,4);
-% positions = 
-% for i=1:length(qTraj_prm)
-%     fk = rob.fkine(qTraj_prm(i,:));
-%     pos = fk(1:3,4);
+fk = rob.fkine(qTraj_prm(1,:));
+prevPos=fk(1:3,4);
+for i=1:length(qTraj_prm)
+    fk = rob.fkine(qTraj_prm(i,:));
+    pos = fk(1:3,4);
 %     rob.plot(qTraj_prm(i,:));
-%     plot3(pos(1), pos(2), pos(3), '*b');
-%     path_size_prm=path_size_prm+norm(prevPos-pos,2);
-% end
-% 
-% display(sprintf('path size rrt: %f, path size sprm %f',path_size_rrt, path_size_prm));
+    plot3(pos(1), pos(2), pos(3), '*b');
+    path_size_prm=path_size_prm+norm(prevPos-pos,2);
+    prevPos=pos;
+end
+disp(prevPos)
+display(sprintf('path size rrt: %f, path size sprm %f',path_size_rrt, path_size_prm));
 hold off
 savefig(strcat('TrajectoryWithObstacle_', int2str(numOfObstacles)))
-path_size_rrt;
-path_size_prm;
 close(gcf)
 end

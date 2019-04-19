@@ -22,7 +22,7 @@ function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenters,
         bool=true;
         bool=true;
         for b=1:size(sphereCenters,1)
-            if checkCollision(rob,iQ,sphereCenters(b,:)',sphereRadius(b))
+            if checkCollision(rob,samples(i,:),sphereCenters(b,:)',sphereRadius(b))
                 bool=false;
                 break
             end
@@ -35,10 +35,9 @@ function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenters,
     adjacencyMat=zeros(size(samples,1));
     for i=1:size(samples,1)-1
         for j=i+1:size(samples,1)
-            disp(i);
             bool=true;
             for b=1:size(sphereCenters,1)
-                if(checkEdge(rob,V(index,:),iQ,sphereCenters(b,:)',sphereRadius(b)))
+                if(checkEdge(rob,samples(j,:),samples(i,:),sphereCenters(b,:)',sphereRadius(b)))
                     bool=false;
                     break;
                 end
