@@ -14,12 +14,16 @@
 %                         Note that this matrix should have zeros on the
 %                         diagonal and it should be symmetric.
 %
-function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenter1,sphereRadius1,sphereCenter2,sphereRadius2,sphereCenter3,sphereRadius3)
+function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenters,sphereRadius)
 
     % Your code here
     samplesFree=[samples(1,:);samples(2,:)];
     for i=3:size(samples,1)
-        if ~robotCollision(rob,samples(i,:),sphereCenter1,sphereRadius1) && ~robotCollision(rob,samples(i,:),sphereCenter2,sphereRadius2) && ~robotCollision(rob,samples(i,:),sphereCenter3,sphereRadius3)
+        bool=true;
+        for b=1:size(sphereCenters,1)
+            bool=bool & (~robotCollision(rob,samples(i,:),sphereCenters(b,:)',sphereRadius(b)));
+        end
+        if bool
             samplesFree=[samplesFree;samples(i,:)];
         end
     end
@@ -32,7 +36,11 @@ function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenter1,
             disp(" c");
             disp(j);
             disp("\n");
-            if ~checkEdge(rob,samples(i,:),samples(j,:),sphereCenter1,sphereRadius1) && ~checkEdge(rob,samples(i,:),samples(j,:),sphereCenter2,sphereRadius2) && ~checkEdge(rob,samples(i,:),samples(j,:),sphereCenter3,sphereRadius3)
+            bool=true;
+            for b=1:size(sphereCenters,1)
+                bool=bool & (~checkEdge(rob,samples(i,:),samples(j,:),sphereCenters(b,:)',sphereRadius(b)));
+            end
+            if bool
                 pt1=rob.fkine(samples(i,:));
                 pt2=rob.fkine(samples(j,:));
                 dist=norm(pt1(1:3,4)-pt2(1:3,4),2);
