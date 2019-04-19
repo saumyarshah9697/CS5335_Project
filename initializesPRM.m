@@ -39,6 +39,7 @@ display(sprintf('number of connected components: %d',numComponents));
 display(sprintf('path length: %f',pathLength));
 qMilestones = samplesFree(path,:);
 qTraj = interpMilestones(qMilestones);
+
 if pathLength == Inf
     error('No path found!')
 end
@@ -51,7 +52,7 @@ for i=1:length(qTraj)
     fk = rob.fkine(qTraj(i,:));
     pos = fk(1:3,4);
     rob.plot(qTraj(i,:));
-    plot3(pos(1), pos(2), pos(3), '-b')
+    plot3(pos(1), pos(2), pos(3), '-b');
     path_size=path_size+norm(prevPos-pos,2);
 end
 
