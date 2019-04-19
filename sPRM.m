@@ -20,10 +20,14 @@ function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenters,
     samplesFree=[samples(1,:);samples(2,:)];
     for i=3:size(samples,1)
         bool=true;
+        bool=true;
         for b=1:size(sphereCenters,1)
-            bool=bool & (~robotCollision(rob,samples(i,:),sphereCenters(b,:)',sphereRadius(b)));
+            if checkCollision(rob,iQ,sphereCenters(b,:)',sphereRadius(b))
+                bool=false;
+                break
+            end
         end
-        if bool
+    if bool
             samplesFree=[samplesFree;samples(i,:)];
         end
     end
@@ -31,13 +35,15 @@ function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenters,
     adjacencyMat=zeros(size(samples,1));
     for i=1:size(samples,1)-1
         for j=i+1:size(samples,1)
-            disp("...   ");  
-            disp("\n");
+            disp(i);
             bool=true;
             for b=1:size(sphereCenters,1)
-                bool=bool & (~checkEdge(rob,samples(i,:),samples(j,:),sphereCenters(b,:)',sphereRadius(b)));
+                if(checkEdge(rob,V(index,:),iQ,sphereCenters(b,:)',sphereRadius(b)))
+                    bool=false;
+                    break;
+                end
             end
-            if bool
+        if bool
                 pt1=rob.fkine(samples(i,:));
                 pt2=rob.fkine(samples(j,:));
                 dist=norm(pt1(1:3,4)-pt2(1:3,4),2);

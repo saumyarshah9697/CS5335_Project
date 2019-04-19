@@ -10,59 +10,74 @@
 %                        goal.
 function qMilestones = rrt(rob,qStart,qGoal,qMin,qMax,sphereCenters,sphereRadius)
 
-    % Your code here
-    Q = qStart;
-    nodes = 0;
-    for i=1:200
-        q = [qMax(1,1)-qMin(1,1).*rand(1,1),qMax(1,2)-qMin(1,2).*rand(1,1),qMax(1,3)-qMin(1,3).*rand(1,1),qMax(1,4)-qMin(1,4).*rand(1,1), qMax(1,5)-qMin(1,5).*rand(1,1), qMax(1,6)-qMin(1,6).*rand(1,1)];
-        bool=true;
+V=[qStart];
+Parents=[0];
+for i=1:500
+    iQ=[(qMax(1,1)-qMin(1,1)).*rand(1,1)+qMin(1,1),(qMax(1,2)-qMin(1,2)).*rand(1,1)+qMin(1,2),(qMax(1,3)-qMin(1,3)).*rand(1,1)+qMin(1,3), (qMax(1,4)-qMin(1,4)).*rand(1,1)+qMin(1,4),(qMax(1,5)-qMin(1,5)).*rand(1,1)+qMin(1,5),(qMax(1,6)-qMin(1,6)).*rand(1,1)+qMin(1,6)];
+    bool=true;
         for b=1:size(sphereCenters,1)
-            bool=bool & (checkCollision(rob,q,sphereCenters(b,:)',sphereRadius(b)==0));
-        end
-        if bool
-            row = 1;
-            minDist = 1000;
-            for j=1;size(Q,1)
-                fk1 = rob.fkine(Q(j,:));
-                pos1 = fk1(1:3,4);
-                fk2 = rob.fkine(q);
-                pos2 = fk2(1:3,4);
-                l2norm = norm(pos1-pos2,2);
-                if minDist > l2norm
-                    row =j; 
-                    minDist = l2norm;
-                end 
+            if checkCollision(rob,iQ,sphereCenters(b,:)',sphereRadius(b))
+                bool=false;
+                break
             end
-            bool=true;
+        end
+    if bool
+        index=getMinimum(rob,V,iQ);
+        bool=true;
             for b=1:size(sphereCenters,1)
-                bool=bool & (checkEdge(rob,Q(row,:),q,sphereCenters(b,:)',sphereRadius(b))==0);
+                if(checkEdge(rob,V(index,:),iQ,sphereCenters(b,:)',sphereRadius(b)))
+                    bool=false;
+                    break;
+                end
             end
-            if bool
-                Q=[Q; q];
-                nodes = [nodes; row];
-            end
+        if bool
+            V=[V;iQ];
+            Parents=[Parents;index];
         end
-    end            
-    q= qGoal;
-    row = 1;
-    minDist = 1000;
-    for j=1:size(Q,1)
-        fk1 = rob.fkine(Q(j,:));
-        pos1 = fk1(1:3,4);
-        fk2 = rob.fkine(q);
-        pos2 = fk2(1:3,4);
-        l2norm = norm(pos1-pos2,2);
-        if minDist > l2norm
-            row =j; 
-            minDist = l2norm;
-        end 
     end
-    Q=[Q; q];
-    nodes = [nodes; row];
-    qMilestones = [Q(end,:)];
-    antecedant = nodes(end);
-    while antecedant~=0 
-        qMilestones = [Q(antecedant,:);qMilestones];
-        antecedant = nodes(antecedant);
-    end 
+end
+iQ=qGoal;
+index=1;
+minDis=1000;
+    for i=2:size(V,1)
+        temp=norm(getLoc(rob,iQ)-getLoc(rob,V(i,:)),2);
+        bool=true;
+            for b=1:size(sphereCenters,1)
+                if(checkEdge(rob,V(i,:),iQ,sphereCenters(b,:)',sphereRadius(b)))
+                    bool=false;
+                    break;
+                end
+            end
+        if temp<minDis && bool
+            index=i;
+            minDis=temp;
+        end
+    end
+V=[V;iQ];
+Parents=[Parents;index];
+
+qMilestones=[V(end,:)];
+parent=Parents(end);
+
+while parent~=0
+    qMilestones=[V(parent,:);qMilestones];
+    parent=Parents(parent);
+end
+end
+
+function index=getMinimum(rob,vertices,vertex)
+    index=1;
+    minDis=1000;
+    for i=1:size(vertices,1)
+        temp=norm(getLoc(rob,vertex)-getLoc(rob,vertices(i,:)),2);
+        if temp<minDis
+            index=i;
+            minDis=temp;
+        end
+    end
+end
+
+function location=getLoc(rob,q)
+Hom=rob.fkine(q);
+location=Hom(1:3,4);
 end

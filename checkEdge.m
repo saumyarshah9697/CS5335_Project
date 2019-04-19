@@ -9,7 +9,7 @@ function collision = checkEdge(rob,q1,q2,sphereCenter,r)
     % Check those pts for collision
     collision = 0;
     for i = 1:n
-        collision = robotCollision(rob,viaPts(i,:),sphereCenter,r);
+        collision = checkCollision(rob,viaPts(i,:),sphereCenter,r);
         if collision
             break
         end
