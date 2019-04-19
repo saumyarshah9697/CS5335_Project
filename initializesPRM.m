@@ -38,7 +38,7 @@ display(sprintf('number of connected components: %d',numComponents));
 [path, pathLength] = shortestpath(G,1,2);
 display(sprintf('path length: %f',pathLength));
 qMilestones = samplesFree(path,:);
-
+qTraj = interpMilestones(qMilestones);
 if pathLength == Inf
     error('No path found!')
 end
@@ -46,12 +46,12 @@ end
 path_size=0;
 fk = rob.fkine(qTraj(i,:));
 prevPos=fk(1:3,4);
+
 for i=1:length(qTraj)
     fk = rob.fkine(qTraj(i,:));
     pos = fk(1:3,4);
-    rob.plot(qTraj(i,:))
-    %pos = positions(1:3,4,i);
-    plot3(pos(1), pos(2), pos(3), '*r')
+    rob.plot(qTraj(i,:));
+    plot3(pos(1), pos(2), pos(3), '-b')
     path_size=path_size+norm(prevPos-pos,2);
 end
 

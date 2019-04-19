@@ -31,10 +31,7 @@ function [samplesFree, adjacencyMat] = sPRM(rob,samples,prmRadius,sphereCenters,
     adjacencyMat=zeros(size(samples,1));
     for i=1:size(samples,1)-1
         for j=i+1:size(samples,1)
-            disp("r");
-            disp(i);
-            disp(" c");
-            disp(j);
+            disp("...   ");  
             disp("\n");
             bool=true;
             for b=1:size(sphereCenters,1)
