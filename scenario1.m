@@ -66,6 +66,6 @@ end
 disp(prevPos)
 display(sprintf('path size rrt: %f, path size sprm %f',path_size_rrt, path_size_prm));
 hold off
-savefig(strcat('TrajectoryWithObstacle_', int2str(numOfObstacles)))
+savefig(strcat('TrajectoryWithObstacle_Scenario1_', int2str(numOfObstacles)))
 close(gcf)
 end
